@@ -30,7 +30,7 @@ DEFAULT_BUILD_RETRY_ATTEMPT=10 #this is necessary because devicemapper occasiona
 STOP_CONTAINER_TIMEOUT_SECONDS=3600
 DO_RESTART=0
 DO_REBUILD=0
-
+CLEAN_GARBAGE=0
 # vmd_deploy -name "dumbscript1" -version "v1.6" -runParam "-d -P" -timeout 10 -path "/opt/docker_dumbscr1/"
 # PARSE ARGS
 while [[ $# > 0 ]]
@@ -63,6 +63,9 @@ case $key in
     ;;
     -do-rebuild|--do-rebuild)
     DO_REBUILD=1
+    ;;
+    --clean-garbage)
+    CLEAN_GARBAGE=1
     ;;
     --default)
     DEFAULT=YES
@@ -253,7 +256,8 @@ local MAX_RETRY_COUNT=$1
 # same thing? :)
 #remove_dangling_images
 sync
-#TEMP DISABLED TO AVOID CHACHE PURGE remove_nonamed_images
+#TEMP DISABLED TO AVOID CHACHE PURGE
+[[ $CLEAN_GARBAGE = 1 ]] && remove_nonamed_images
 
 echo "Stop containers with untagged images:" >&2
 untagged_running_containers 1 | xargs --no-run-if-empty docker stop -t $STOP_CONTAINER_TIMEOUT_SECONDS
