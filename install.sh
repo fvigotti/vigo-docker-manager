@@ -19,7 +19,7 @@ local check_file_name_existence=${SRC_PATH}'/vdm_run.sh'
 }
 
 
-for init in ${SRC_PATH}/*; do
+for init in ${SRC_PATH}/*.sh; do
     echo 'linking : '$init' /bin/'$init
 
     # extract filename
