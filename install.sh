@@ -1,7 +1,7 @@
 #!/bin/bash
 
 install_vigo_docker_manager(){
-local SRC_PATH=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+local SRC_PATH=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )'/src'
 local check_file_name_existence=${SRC_PATH}'/vdm_run.sh'
 
 
