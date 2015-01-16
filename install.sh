@@ -21,7 +21,12 @@ local check_file_name_existence=${SRC_PATH}'/vdm_run.sh'
 
 for init in ${SRC_PATH}/*; do
     echo 'linking : '$init' /bin/'$init
-    local dest_link_name=${init/\.sh/}
+
+    # extract filename
+    local dest_link_name=b=$(basename $init)
+    #remove .sh from filename
+    dest_link_name=${init/\.sh/}
+
     # if destination link exist already, unlink
     [[ -h dest_link_name ]] && {
         echo ' destination is already a link, unlinking.. > '$dest_link_name >&2
