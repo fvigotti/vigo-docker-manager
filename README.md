@@ -51,7 +51,9 @@ vdm_deploy -do-restart -name "{{ dumbscript1_appname }}" -version "{{ dumbscript
 stop previous version of the image-name running (if restart param is provided, else will fail to run) and execute docker run with given params using previously built image-name and version,
  generating app name, and saving the command execution param into an image-name-and-version script
  stored in `path/log` directory, this allow the re-execution of a specific version of the container with specific param used to run that version
- , perform multiple attempt to start the container and logs attempt results in `path/log/`
+ , perform multiple attempt to start the container and logs attempt results in `path/log/`  
+ -d option for docker run is always implicit 
+
 
 **-path**  
  path of the dockerfile image, this is used to store logs and run-history-scripts

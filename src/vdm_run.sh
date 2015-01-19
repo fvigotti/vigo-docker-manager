@@ -247,7 +247,7 @@ if [ "$DRY_RUN" -eq "0" ]; then
 
            sync
            rebuild_instance_name
-           docker run $DOCKER_RUN_PARAMS --name="${DOCKER_CONTAINER_INSTANCE_NAME}" ${DOCKER_IMAGE_NAME} 2>&1 | tee -a $RUN_LOG
+           docker run -d $DOCKER_RUN_PARAMS --name="${DOCKER_CONTAINER_INSTANCE_NAME}" ${DOCKER_IMAGE_NAME} 2>&1 | tee -a $RUN_LOG
            buildResults=$?
 
            sync
