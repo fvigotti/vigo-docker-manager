@@ -343,33 +343,3 @@ OPTS_VDM_RUN=""
 echo '[EXECUTING] vdm_run '${OPTS_VDM_RUN}' -name "'${APP_NAME}'" -version "'${APP_VERSION}'" -runParam "'${DOCKER_RUN_PARAMS}'" -timeout "'${STOP_CONTAINER_TIMEOUT_SECONDS}'" -path "'${DOCKER_IMAGE_PATH}'"'  >&2
 vdm_run $OPTS_VDM_RUN -name "${APP_NAME}" -version "${APP_VERSION}" -runParam "${DOCKER_RUN_PARAMS}" -timeout "${STOP_CONTAINER_TIMEOUT_SECONDS}" -path "${DOCKER_IMAGE_PATH}"
 }
-
-
-#sudo service docker restart
-#sleep 5
-
-#
-#echo '>>> Starting new container'
-#sudo docker run -p 443:443 -p 80:80 -p 5922:22 -d mywebapp
-#
-#
-#echo '>>> Cleaning up containers'
-#sudo docker ps -a | grep "Exit" | awk '{print $1}' | while read -r id ; do
-# sudo docker rm $id
-#done
-#
-#
-#echo '>>> Cleaning up images'
-## NOTE: we only take the latest image as Docker will perform a cascade of deletions
-#sudo docker images | grep "^<none>" | head -n 1 | awk 'BEGIN { FS = "[ \t]+" } { print $3 }'  | while read -r id ; do
-# sudo docker rmi $id
-#done
-
-#RESULT=$(cat /tmp/docker_build_result.log | tail -n 1)
-#if [[ "$RESULT" != *Successfully* ]];
-#then
-#  exit -1
-#fi
-
-
-
