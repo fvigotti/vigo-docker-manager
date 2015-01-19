@@ -73,5 +73,7 @@ stop previous version of the image-name running (if restart param is provided, e
 
 
 # todo:
-refresh public registry hub cache before deploy
-(docker pull $imagename )
+refresh public registry hub cache before deploy  
+(docker pull $imagename )  
+repristinate old-image purge section  
+add caching control options (forcing no-cache)     

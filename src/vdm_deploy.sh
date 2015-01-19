@@ -340,6 +340,6 @@ fi
 OPTS_VDM_RUN=""
 [[ $DO_RESTART = 1 ]] && OPTS_VDM_RUN=$OPTS_VDM_RUN" -do-restart" || a="$d"
 [[ $DO_START -eq "1" ]] && {
-echo '[EXECUTING] vdm_run '${OPTS_VDM_RUN}' -name "'${APP_NAME}'" -version "'${APP_VERSION}'" -runParam "'${DOCKER_RUN_PARAMS}'" -timeout "'${STOP_CONTAINER_TIMEOUT_SECONDS}'" -path "'${DOCKER_IMAGE_PATH}'"'  >&2
-vdm_run $OPTS_VDM_RUN -name "${APP_NAME}" -version "${APP_VERSION}" -runParam "${DOCKER_RUN_PARAMS}" -timeout "${STOP_CONTAINER_TIMEOUT_SECONDS}" -path "${DOCKER_IMAGE_PATH}"
+    echo '[EXECUTING] vdm_run '${OPTS_VDM_RUN}' -name "'${APP_NAME}'" -version "'${APP_VERSION}'" -runParam "'${DOCKER_RUN_PARAMS}'" -timeout "'${STOP_CONTAINER_TIMEOUT_SECONDS}'" -path "'${DOCKER_IMAGE_PATH}'"'  >&2
+    vdm_run $OPTS_VDM_RUN -name "${APP_NAME}" -version "${APP_VERSION}" -runParam "${DOCKER_RUN_PARAMS}" -timeout "${STOP_CONTAINER_TIMEOUT_SECONDS}" -path "${DOCKER_IMAGE_PATH}"
 }
