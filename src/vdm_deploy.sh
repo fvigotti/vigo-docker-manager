@@ -94,7 +94,6 @@ echo 'CURPATH = '${CURPATH}\
 ' , DOCKER_RUN_PARAMS = '${DOCKER_RUN_PARAMS}\
 ' , STOP_CONTAINER_TIMEOUT_SECONDS = '${STOP_CONTAINER_TIMEOUT_SECONDS}\
 ' , CUR_EPOCH = '${CUR_EPOCH}  >&2
-# ps -a  | grep ${APP_NAME} | awk '{print $1}' | tail -2 | while read -r id; do docker rm $id ; done
 
 if [ -z "$APP_NAME" ] || ! [[ "$APP_NAME" =~ ^(.+)$ ]]; then
  echo -e 'invalid APP_NAME :'$APP_NAME')' >&2

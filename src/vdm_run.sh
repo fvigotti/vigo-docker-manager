@@ -186,7 +186,7 @@ ALREADY_RUNNING_COUNTER=$(search_app_instances_running ${APP_NAME} |wc -l)
 echo '$ALREADY_RUNNING_COUNTER = '$ALREADY_RUNNING_COUNTER' , $DO_RESTART='$DO_RESTART >&2
 if [ "$ALREADY_RUNNING_COUNTER" -gt "0" ]; then
    if [ "$DO_RESTART" -gt "0" ]; then
-    echo '[RESTART] app container already running =  '${APP_NAME}' '${APP_VERSION}', stopping instances' >&2
+    echo '[RESTART] app container already running =  '${APP_NAME}' '${APP_VERSION}', stopping instances ' >&2
     search_app_instances_running ${APP_NAME} | awk   '{print $1}' | xargs --no-run-if-empty docker stop -t $STOP_CONTAINER_TIMEOUT_SECONDS
    else
     echo '[ALREADY RUNNING] app container already running =  '${ALREADY_RUNNING_CONTAINER} >&2
@@ -219,7 +219,7 @@ fi
 #echo -e '[DRY-RUN]\n docker ps --filter "name="'${APP_NAME}' -q | xargs --no-run-if-empty docker stop -t '$STOP_CONTAINER_TIMEOUT_SECONDS
 #fi
 
-echo '>>> Starting container docker run '$DOCKER_RUN_PARAMS' --name="'${DOCKER_CONTAINER_INSTANCE_NAME}'" '${DOCKER_IMAGE_NAME} >&2
+echo '>>> Starting container docker run -d '$DOCKER_RUN_PARAMS' --name="'${DOCKER_CONTAINER_INSTANCE_NAME}'" '${DOCKER_IMAGE_NAME} >&2
 
 if [ "$DRY_RUN" -eq "0" ]; then
 docker ps --filter "name="${APP_NAME} -q | xargs --no-run-if-empty docker stop -t $STOP_CONTAINER_TIMEOUT_SECONDS
@@ -237,7 +237,7 @@ if [ "$DRY_RUN" -eq "0" ]; then
     echo "" > $RUN_LOG
 
     n=0
-    echo -e '[EXECUTING]\ndocker run '$DOCKER_RUN_PARAMS' --name="'${DOCKER_CONTAINER_INSTANCE_NAME}'" '${DOCKER_IMAGE_NAME} >&2
+
 
     MAX_RETRY_COUNT=5
     set +e
@@ -247,6 +247,7 @@ if [ "$DRY_RUN" -eq "0" ]; then
 
            sync
            rebuild_instance_name
+           echo -e '[EXECUTING]\ndocker run  -d '$DOCKER_RUN_PARAMS' --name="'${DOCKER_CONTAINER_INSTANCE_NAME}'" '${DOCKER_IMAGE_NAME} >&2
            docker run -d $DOCKER_RUN_PARAMS --name="${DOCKER_CONTAINER_INSTANCE_NAME}" ${DOCKER_IMAGE_NAME} 2>&1 | tee -a $RUN_LOG
            buildResults=$?
 
@@ -272,7 +273,7 @@ if [ "$DRY_RUN" -eq "0" ]; then
     return 1
 
 else
-echo -e '[DRY-RUN]\ndocker run '$DOCKER_RUN_PARAMS' --name="'${DOCKER_CONTAINER_INSTANCE_NAME}'" '${DOCKER_IMAGE_NAME} >&2
+echo -e '[DRY-RUN]\ndocker run  -d '$DOCKER_RUN_PARAMS' --name="'${DOCKER_CONTAINER_INSTANCE_NAME}'" '${DOCKER_IMAGE_NAME} >&2
 fi
 
 
