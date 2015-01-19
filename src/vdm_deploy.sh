@@ -31,6 +31,7 @@ STOP_CONTAINER_TIMEOUT_SECONDS=3600
 DO_RESTART=0
 DO_REBUILD=0
 CLEAN_GARBAGE=0
+DO_START=1
 # vmd_deploy -name "dumbscript1" -version "v1.6" -runParam "-d -P" -timeout 10 -path "/opt/docker_dumbscr1/"
 # PARSE ARGS
 while [[ $# > 0 ]]
@@ -66,6 +67,9 @@ case $key in
     ;;
     --clean-garbage)
     CLEAN_GARBAGE=1
+    ;;
+    --build-only)
+    DO_START=0
     ;;
     --default)
     DEFAULT=YES
@@ -335,9 +339,11 @@ fi
 # build vdm_run command
 OPTS_VDM_RUN=""
 [[ $DO_RESTART = 1 ]] && OPTS_VDM_RUN=$OPTS_VDM_RUN" -do-restart" || a="$d"
-
+[[ $DO_START -eq "1" ]] && {
 echo '[EXECUTING] vdm_run '${OPTS_VDM_RUN}' -name "'${APP_NAME}'" -version "'${APP_VERSION}'" -runParam "'${DOCKER_RUN_PARAMS}'" -timeout "'${STOP_CONTAINER_TIMEOUT_SECONDS}'" -path "'${DOCKER_IMAGE_PATH}'"'  >&2
 vdm_run $OPTS_VDM_RUN -name "${APP_NAME}" -version "${APP_VERSION}" -runParam "${DOCKER_RUN_PARAMS}" -timeout "${STOP_CONTAINER_TIMEOUT_SECONDS}" -path "${DOCKER_IMAGE_PATH}"
+}
+
 
 #sudo service docker restart
 #sleep 5
