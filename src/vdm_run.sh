@@ -16,6 +16,7 @@ VDM_RUN_SCRIPT_VERSION=1
 DOCKER_DETACHED_MODE="-d"
 OPTIONS_DESTROY_PREVIOUS_CONTAINER=0
 TMP_DIR="/tmp/"
+DOCKER_RUN_LOGDIR="/var/log/docker/"
 DOCKER_RUN_LOG_COMMENT=""
 DOCKER_RUN_ADDITIONAL_PARAMS=''
 DOCKER_IMAGE_VERSION=''
@@ -249,7 +250,10 @@ fi
     echo '[ERROR] '$DOCKER_IMAGE_NAME' not found, exiting '  >&2
     exit 3
 }
-
+[ -d "$DOCKER_RUN_LOGDIR" ] || {
+    echo 'docker log directory > '$DOCKER_RUN_LOGDIR' not found, creating it'  >&2
+    mkdir -p $DOCKER_RUN_LOGDIR
+}
 
 if [ -z "$DOCKER_IMAGE_VERSION" ]; then
     echo 'DOCKER_IMAGE_VERSION not specified, searching for higher version number... ' >&2
@@ -263,7 +267,7 @@ fi
 DOCKER_IMAGE_UNIQUE_ID_OR_NAMEANDVERSION=$DOCKER_IMAGE_NAME':'$DOCKER_IMAGE_VERSION
 echo 'DOCKER_IMAGE_UNIQUE_ID_OR_NAMEANDVERSION = '$DOCKER_IMAGE_UNIQUE_ID_OR_NAMEANDVERSION >&2
 
-DOCKER_RUN_LOG='/var/log/docker/run_'${DOCKER_IMAGE_NAME}'.log'
+DOCKER_RUN_LOG=$DOCKER_RUN_LOGDIR'/run_'${DOCKER_IMAGE_NAME}'.log'
 echo 'DOCKER_RUN_LOG = '$DOCKER_RUN_LOG >&2
 
 echo 'checking if container '$CONTAINER_NAME' is already running ' >&2
