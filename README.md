@@ -57,6 +57,9 @@ stop previous version of the image-name running (if restart param is provided, e
 **--img-name $name**  
  the docker image name that must be run , this will be combined with version to provided the full image:tag name   
 
+**--container-name $name**    
+ name of the container, default=image name without special chars (which are not allowed) 
+
 **--img-version $version** *[optional]*  
  -> if not provided will default to latest built image version (using sort params : "sort --ignore-leading-blanks --version-sort -k2 -r" )  
  
@@ -75,8 +78,8 @@ stop previous version of the image-name running (if restart param is provided, e
 **--no-detach** *[optional]*  
  do not add "-d" to docker run    
 
-**--container-name $name**  *[optional]*  
- name of the container, default=image name without special chars (which are not allowed) 
+**--custom-cmd** *[optional]*  
+ do not add "-d" to docker run    
 
 # todo:
 refresh public registry hub cache before deploy  

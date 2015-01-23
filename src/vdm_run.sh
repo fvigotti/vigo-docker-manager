@@ -21,6 +21,7 @@ DOCKER_RUN_ADDITIONAL_PARAMS=''
 DOCKER_IMAGE_VERSION=''
 DOCKER_IMAGE_UNIQUE_ID_OR_NAMEANDVERSION=''
 MAX_CONTAINER_RUN_ATTEMPT_COUNT=5
+CUSTOM_DOCKER_RUN_CMD=''
 
 clean_special_chars() {
     local a=${1//[^[:alnum:]]/}
@@ -39,7 +40,7 @@ case $key in
     DOCKER_IMAGE_NAME="$2"
     shift
     ;;
-    --container-name) #optional
+    --container-name)
     CONTAINER_NAME="$2"
     shift
     ;;
@@ -53,6 +54,10 @@ case $key in
     ;;
     -timeout|--timeout) #optional
     STOP_CONTAINER_TIMEOUT_SECONDS="$2"
+    shift
+    ;;
+    --custom-cmd) #optional
+    CUSTOM_DOCKER_RUN_CMD="$2"
     shift
     ;;
     --destroy-previous-container) #optional
@@ -76,6 +81,10 @@ done
 
 CONTAINER_HISTORY_PRESERVE_COUNT=4
 
+[ -z "$CONTAINER_NAME" ] && {
+    echo 'container name is mandatory' >&2
+    exit 1
+}
 
 CUR_EPOCH=$(date +%s)
 
@@ -127,10 +136,10 @@ stop_running_container(){
     local container_id=$1
     local stop_timeout=$2
     echo 'stopping container : '$container_id' , timeout='$stop_timeout' , start'`date`  >&2
-    docker stop -t $stop_timeout container_id
+    docker stop -t $stop_timeout $container_id
     local stop_results=$?
-    echo 'stopping container : '$container_id' , timeout='$stop_timeout' , end'$(date)', results = 'stop_results  >&2
-    return stop_results
+    echo 'stopping container : '$container_id' , timeout='$stop_timeout' , end'$(date)', results = '$stop_results  >&2
+    return $stop_results
 }
 
 docker_remove_stopped_container () {
@@ -153,7 +162,7 @@ docker_restart_container () {
 # return docker command to run the container
 #
 get_docker_start_container_CMD() {
-   echo 'docker run '$DOCKER_DETACHED_MODE' '$DOCKER_RUN_ADDITIONAL_PARAMS' --name="'${CONTAINER_NAME}'" '${DOCKER_IMAGE_UNIQUE_ID_OR_NAMEANDVERSION}
+   echo 'docker run '$DOCKER_DETACHED_MODE' '$DOCKER_RUN_ADDITIONAL_PARAMS' --name="'${CONTAINER_NAME}'" '${DOCKER_IMAGE_UNIQUE_ID_OR_NAMEANDVERSION} ${CUSTOM_DOCKER_RUN_CMD}
 }
 
 run_docker_cmd_multiple_attempt(){
@@ -171,8 +180,9 @@ run_docker_cmd_multiple_attempt(){
     until [ "$retry_counter" -ge "$MAX_CONTAINER_RUN_ATTEMPT_COUNT" ]
        do
            sync
-           echo -e '[EXECUTING] '$DOCKER_CMD >&2
-           $DOCKER_RUN_CMD 2>&1 | tee -a $DOCKER_RUN_LOG
+           echo -e '[EXECUTING]>'$DOCKER_CMD >&2
+           echo $( date )' [EXECUTING] '$DOCKER_CMD >>  $DOCKER_RUN_LOG
+           exec $DOCKER_CMD 2>&1 | tee -a $DOCKER_RUN_LOG
            docker_run_success=$?
            sync
 
@@ -192,7 +202,6 @@ run_docker_cmd_multiple_attempt(){
     echo '[FATAL-ERROR] run failed after '$retry_counter' attempt' >&2
     set -e
     tail -40 $DOCKER_RUN_LOG
-    set -e
     return 1
 }
 
@@ -223,6 +232,7 @@ echo '[START] VDM_RUN_SCRIPT_VERSION='$VDM_RUN_SCRIPT_VERSION >&2
 echo 'DOCKER_IMAGE_NAME='${DOCKER_IMAGE_NAME}\
 ', DOCKER_IMAGE_VERSION = '${DOCKER_IMAGE_VERSION}\
 ' , DOCKER_RUN_PARAMS = '${DOCKER_RUN_ADDITIONAL_PARAMS}\
+' , CUSTOM_DOCKER_RUN_CMD= '${CUSTOM_DOCKER_RUN_CMD}\
 ' , STOP_CONTAINER_TIMEOUT_SECONDS = '${STOP_CONTAINER_TIMEOUT_SECONDS}\
 ' , DOCKER_CONTAINER_INSTANCE_NAME = '${DOCKER_CONTAINER_INSTANCE_NAME}\
 ' , CUR_EPOCH = '${CUR_EPOCH} >&2
@@ -243,7 +253,11 @@ fi
 
 if [ -z "$DOCKER_IMAGE_VERSION" ]; then
     echo 'DOCKER_IMAGE_VERSION not specified, searching for higher version number... ' >&2
-    DOCKER_IMAGE_VERSION=$( $(get_sorted_images $image_name) | head -1 |awk '{print $2}' )
+    DOCKER_IMAGE_VERSION=$( get_sorted_images $DOCKER_IMAGE_NAME | head -1 |awk '{print $2}' )
+    if [ -z "$DOCKER_IMAGE_VERSION" ]; then
+        echo 'image version not found for image > '$(get_sorted_images $DOCKER_IMAGE_NAME) >&2
+        exit 6
+    fi
     echo 'DOCKER_IMAGE_VERSION found = '$DOCKER_IMAGE_VERSION >&2
 fi
 DOCKER_IMAGE_UNIQUE_ID_OR_NAMEANDVERSION=$DOCKER_IMAGE_NAME':'$DOCKER_IMAGE_VERSION
