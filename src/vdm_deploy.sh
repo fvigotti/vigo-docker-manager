@@ -145,6 +145,9 @@ untagged_running_containers() {
 }
 
 
+
+
+
 get_running_containers_for_image() { #$1 = ImageAndTagRegexp" $2 = fields to print
   echo ':run docker ps | awk ''$2 ~ "^\\s*'$1'\\s*$"  {print $'$2'}''' >&2
   docker ps | awk '$2 ~ "^\\s*'$1'\\s*$"  {print $'$2'}'
