@@ -5,8 +5,7 @@ echo -e '[ VIGO DOCKER MANAGER >>>> run ]'
 REMOVE_HEADER="tail -n +2"
 
 print_usage (){
-#echo -e 'usage = \n'$0' [-do_restart] -name APPNAME -version VERSION -runParam RUNPARAM -timeout TIMEOUT -path DOCKERFILEPATH\n\nExample:\n'$0' -name myapp -version 1.12 -runParam "-p 443:443 -p 80:80 -p 5922:22 -d" -timeout 10 -path="/opt/apptest/"' >&2
-echo -e 'TODO, usage print '
+echo -e 'usage = \n'$0' vdm_run --img-name testbash --container-name tb1 --run-params "" --timeout 10 --destroy-previous-container ' >&2
 }
 
 
