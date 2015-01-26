@@ -250,6 +250,7 @@ fi
     echo '[ERROR] '$DOCKER_IMAGE_NAME' not found, exiting '  >&2
     exit 3
 }
+
 [ -d "$DOCKER_RUN_LOGDIR" ] || {
     echo 'docker log directory > '$DOCKER_RUN_LOGDIR' not found, creating it'  >&2
     mkdir -p $DOCKER_RUN_LOGDIR

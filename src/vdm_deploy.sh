@@ -97,13 +97,13 @@ echo 'CURPATH = '${CURPATH}\
 ' , CUR_EPOCH = '${CUR_EPOCH}  >&2
 
 if [ -z "$DOCKER_IMG_NAME" ] || ! [[ "$DOCKER_IMG_NAME" =~ ^(.+)$ ]]; then
- echo -e 'invalid DOCKER_IMG_NAME :'$DOCKER_IMG_NAME')' >&2
+ echo -e 'invalid DOCKER_IMG_NAME : '$DOCKER_IMG_NAME'' >&2
      print_usage
     exit -1
 fi
 
 if [ -z "$DOCKER_IMG_VERSION" ] || ! [[ "$DOCKER_IMG_VERSION" =~ ^([0-9\.]+)$ ]]; then
- echo -e 'invalid DOCKER_IMG_VERSION :'$DOCKER_IMG_VERSION')' >&2
+ echo -e 'invalid DOCKER_IMG_VERSION :'$DOCKER_IMG_VERSION'' >&2
     print_usage
     exit -1
 fi
@@ -163,7 +163,7 @@ get_sorted_images () {
  docker images  | awk '$1 ~ "'${DOCKER_IMG_NAME}'" {print $0}' | sort --ignore-leading-blanks --version-sort -k2 -r
 }
 
- get_stopped_containers_ids_for_image_id () {
+get_stopped_containers_ids_for_image_id () {
 if [ -z "$1" ] || ! [[ "$1" =~ ^[0-9a-f]+$ ]]; then
  echo -e 'invalid image id : '$1' ' >&2
  exit -1
